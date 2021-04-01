@@ -1,10 +1,4 @@
-extends KinematicBody2D
-
-export(int) var SPEED: int = 300
-var velocity: Vector2 = Vector2.ZERO
-
-onready var animPlayer = $AnimationPlayer
-onready var sprite = $Sprite
+extends "res://resources/entity/EntityBase.gd"
 
 
 func _physics_process(delta):
@@ -21,9 +15,6 @@ func _physics_process(delta):
 		animPlayer.play("idle")
 	
 	move()
-
-func move():
-	velocity = move_and_slide(velocity)
 
 func get_input_direction() -> Vector2:
 	var input_dir: Vector2 = Vector2.ZERO
