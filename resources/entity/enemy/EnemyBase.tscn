@@ -1,5 +1,61 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://resources/entity/EntityBase.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Dungeon Crawler Pack/enemies/flying creature/fly_anim_spritesheet.png" type="Texture" id=2]
+[ext_resource path="res://resources/overlap/Hitbox.tscn" type="PackedScene" id=3]
+
+[sub_resource type="Animation" id=1]
+resource_name = "flying"
+length = 0.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 7.0
+height = 4.0
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 6.0
+height = 4.0
 
 [node name="EnemyBase" instance=ExtResource( 1 )]
+collision_layer = 4
+collision_mask = 7
+
+[node name="Sprite" parent="." index="0"]
+position = Vector2( 0, -5 )
+texture = ExtResource( 2 )
+hframes = 4
+
+[node name="AnimationPlayer" parent="." index="2"]
+autoplay = "flying"
+anims/flying = SubResource( 1 )
+
+[node name="Hurtbox" parent="." index="3"]
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+shape = SubResource( 2 )
+
+[node name="Hitbox" parent="." index="4" instance=ExtResource( 3 )]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+shape = SubResource( 3 )
+
+[editable path="Hurtbox"]
+
+[editable path="Hitbox"]
