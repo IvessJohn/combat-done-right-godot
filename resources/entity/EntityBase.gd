@@ -51,6 +51,9 @@ func receive_damage(base_damage: int):
 
 func _on_Hurtbox_area_entered(hitbox):
 	receive_damage(hitbox.damage)
+	
+	if hitbox.is_in_group("Projectile"):
+		hitbox.destroy()
 
 
 func _on_EntityBase_died():

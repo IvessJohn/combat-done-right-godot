@@ -57,5 +57,4 @@ collision_mask = 2
 shape = SubResource( 3 )
 
 [editable path="Hurtbox"]
-
 [editable path="Hitbox"]
