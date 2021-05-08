@@ -15,6 +15,9 @@ export(float) var knockback_modifier: float = 0.1
 export(int) var SPEED: int = 75
 var velocity: Vector2 = Vector2.ZERO
 
+export(PackedScene) var EFFECT_HIT: PackedScene = null
+export(PackedScene) var EFFECT_DIED: PackedScene = null
+
 onready var sprite = $Sprite
 onready var collShape = $CollisionShape2D
 onready var animPlayer = $AnimationPlayer
@@ -44,6 +47,7 @@ func move():
 	velocity = move_and_slide(velocity)
 
 func die():
+	spawn_effect(EFFECT_DIED)
 	queue_free()
 
 func receive_damage(base_damage: int):
@@ -69,7 +73,14 @@ func _on_Hurtbox_area_entered(hitbox):
 		hitbox.destroy()
 	
 	receive_knockback(hitbox.global_position, actual_damage)
+	spawn_effect(EFFECT_HIT)
 
 
 func _on_EntityBase_died():
 	die()
+
+func spawn_effect(EFFECT: PackedScene, effect_position: Vector2 = global_position):
+	if EFFECT:
+		var effect = EFFECT.instance()
+		get_tree().current_scene.add_child(effect)
+		effect.global_position = effect_position
