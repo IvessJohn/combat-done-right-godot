@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://resources/entity/EntityBase.gd" type="Script" id=1]
 [ext_resource path="res://resources/overlap/Hurtbox.tscn" type="PackedScene" id=2]
 [ext_resource path="res://resources/effects/HitEffect.tscn" type="PackedScene" id=3]
 [ext_resource path="res://resources/effects/DeathEffect.tscn" type="PackedScene" id=4]
+[ext_resource path="res://resources/UI/EntityHealthbar.tscn" type="PackedScene" id=5]
 
 [node name="EntityBase" type="KinematicBody2D"]
 script = ExtResource( 1 )
@@ -17,6 +18,13 @@ EFFECT_DIED = ExtResource( 4 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="Hurtbox" parent="." instance=ExtResource( 2 )]
+
+[node name="EntityHealthbar" parent="." instance=ExtResource( 5 )]
+visible = false
+margin_left = -11.0
+margin_top = -20.0
+margin_right = 29.0
+margin_bottom = 20.0
 
 [connection signal="died" from="." to="." method="_on_EntityBase_died"]
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_Hurtbox_area_entered"]

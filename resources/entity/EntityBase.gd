@@ -4,6 +4,8 @@ signal hp_max_changed(new_hp_max)
 signal hp_changed(new_hp)
 signal died
 
+const INDICATOR_DAMAGE = preload("res://resources/UI/DamageIndicator.tscn")
+
 
 export(int) var hp_max: int = 100 setget set_hp_max
 export(int) var hp: int = hp_max setget set_hp, get_hp
@@ -22,6 +24,7 @@ onready var sprite = $Sprite
 onready var collShape = $CollisionShape2D
 onready var animPlayer = $AnimationPlayer
 onready var hurtbox = $Hurtbox
+onready var healthBar = $EntityHealthbar
 
 
 func get_hp():
@@ -31,13 +34,18 @@ func set_hp(value):
 	if value != hp:
 		hp = clamp(value, 0, hp_max)
 		emit_signal("hp_changed", hp)
+#		healthBar.value = hp
+		healthBar.animate_hp_change(hp)
 		if hp == 0:
 			emit_signal("died")
+		elif hp != hp_max:
+			healthBar.show()
 
 func set_hp_max(value):
 	if value != hp_max:
 		hp_max = max(0, value)
 		emit_signal("hp_max_changed", hp_max)
+		healthBar.max_value = hp_max
 		self.hp = hp
 
 func _physics_process(delta):
@@ -74,6 +82,7 @@ func _on_Hurtbox_area_entered(hitbox):
 	
 	receive_knockback(hitbox.global_position, actual_damage)
 	spawn_effect(EFFECT_HIT)
+	spawn_dmgIndicator(actual_damage)
 
 
 func _on_EntityBase_died():
@@ -84,3 +93,9 @@ func spawn_effect(EFFECT: PackedScene, effect_position: Vector2 = global_positio
 		var effect = EFFECT.instance()
 		get_tree().current_scene.add_child(effect)
 		effect.global_position = effect_position
+		return effect
+
+func spawn_dmgIndicator(damage: int):
+	var indicator = spawn_effect(INDICATOR_DAMAGE)
+	if indicator:
+		indicator.label.text = str(damage)
